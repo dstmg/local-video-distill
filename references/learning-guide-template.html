@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>视频学习指南</title>
+<style>
+  /* ===== 主题变量（右上角按钮切换，localStorage 记忆）=====
+     三套：light 浅色（默认）/ dark 暗色 / magazine 杂志风
+     改配色只需改这里的变量，组件样式无需变动。 */
+  :root, [data-theme="light"]{
+    --bg:#ffffff; --bg-soft:#fbfbfd; --line:#e5e5e5; --line-soft:#f0f0f0;
+    --ink:#1f1f1f; --ink-2:#525252; --ink-3:#737373;
+    --accent:#ea580c; --accent-soft:#fff4ee;
+    --radius:10px; --shadow:none; --wrap:780px; --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    --h-weight:500; --card-border:1px solid var(--line); --card-bg:var(--bg-soft);
+  }
+  [data-theme="dark"]{
+    --bg:#16161a; --bg-soft:#1c1d22; --line:#2e2f36; --line-soft:#26272d;
+    --ink:#e8e8ea; --ink-2:#a8a9b0; --ink-3:#7a7b82;
+    --accent:#ff7a45; --accent-soft:#2a1a12;
+    --card-border:1px solid var(--line); --card-bg:var(--bg-soft);
+  }
+  [data-theme="magazine"]{
+    --bg:#ffffff; --bg-soft:#ffffff; --line:#d8d5cc; --line-soft:#eceae3;
+    --ink:#111110; --ink-2:#4a4a46; --ink-3:#86847c;
+    --accent:#8a3324; --accent-soft:#f6f2ec;
+    --radius:0px; --shadow:none; --wrap:660px; --font:Georgia,"Songti SC","Noto Serif CJK SC",serif;
+    --h-weight:400; --card-border:none; --card-bg:transparent;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:16px/1.75 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  body{background:var(--bg); color:var(--ink); font-family:var(--font);}
+  .wrap{max-width:var(--wrap); margin:0 auto; padding:24px 20px 120px;}
+  /* 顶部目录 */
+  .toc{position:sticky; top:0; z-index:5; background:var(--bg);
+    border-bottom:1px solid var(--line);
+    padding:10px 0; margin:-24px -20px 24px;}
+  .toc-inner{max-width:var(--wrap); margin:0 auto; padding:0 20px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .toc a{font-size:13px; color:var(--ink-3); text-decoration:none; padding:4px 10px;
+    border:1px solid var(--line); border-radius:999px; white-space:nowrap;}
+  .toc a:hover{color:var(--accent); border-color:var(--accent);}
+  /* 主题切换按钮 */
+  .theme-sw{display:flex; gap:4px; margin-left:auto;}
+  .theme-sw button{font-size:12px; color:var(--ink-3); background:transparent; cursor:pointer;
+    border:1px solid var(--line); border-radius:999px; padding:3px 10px;}
+  .theme-sw button.on{color:#fff; background:var(--accent); border-color:var(--accent);}
+  h1{font-size:26px; line-height:1.3; margin:0 0 6px; letter-spacing:-.01em; font-weight:var(--h-weight);}
+  .sub{color:var(--ink-3); font-size:14px; margin:0 0 28px;}
+  h2{font-size:20px; margin:40px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--accent); color:var(--ink); font-weight:var(--h-weight);}
+  h3{font-size:16px; margin:22px 0 8px; color:var(--accent); font-weight:var(--h-weight);}
+  p{margin:10px 0;}
+  ul,ol{margin:10px 0; padding-left:22px;}
+  li{margin:6px 0;}
+  .lead{background:var(--accent-soft); border-left:3px solid var(--accent);
+    padding:14px 16px; border-radius:calc(var(--radius) - 2px); color:var(--ink-2); margin:0 0 8px;}
+  /* 概念卡 */
+  .concept{border:var(--card-border); border-radius:var(--radius); padding:14px 16px; margin:12px 0; background:var(--card-bg);}
+  .concept .t{font-weight:var(--h-weight); color:var(--accent); margin-bottom:6px;}
+  /* 步骤清单 */
+  .steps{counter-reset:s; list-style:none; padding:0; margin:12px 0;}
+  .steps li{counter-increment:s; position:relative; padding:10px 12px 10px 44px; border:var(--card-border);
+    border-radius:var(--radius); margin:8px 0; background:var(--card-bg);}
+  .steps li::before{content:counter(s); position:absolute; left:12px; top:10px; width:22px; height:22px;
+    background:var(--accent); color:#fff; border-radius:50%; font-size:13px; display:flex; align-items:center; justify-content:center;}
+  .steps .ok{color:var(--ink-3); font-size:14px; display:block; margin-top:4px;}
+  .steps .ts{color:var(--accent); font-size:12px; margin-left:6px;}
+  /* 误区 */
+  .pit{border:var(--card-border); border-left:3px solid var(--danger,#b91c1c); border-radius:calc(var(--radius) - 2px); padding:12px 14px; margin:10px 0;}
+  .pit b{color:var(--danger,#b91c1c);}
+  /* 实例 */
+  .example{background:var(--bg-soft); border:var(--card-border); border-radius:var(--radius); padding:14px 16px; margin:12px 0; font-variant-numeric:tabular-nums;}
+  /* 术语表 */
+  .gloss{display:grid; grid-template-columns:1fr; gap:8px; margin:10px 0;}
+  .gloss div{border-bottom:1px solid var(--line-soft); padding:8px 0;}
+  .gloss b{color:var(--accent);}
+  /* 自测 */
+  details.qa{border:var(--card-border); border-radius:var(--radius); padding:10px 14px; margin:10px 0; background:var(--card-bg);}
+  details.qa summary{cursor:pointer; font-weight:var(--h-weight); color:var(--ink);}
+  details.qa summary::-webkit-details-marker{color:var(--accent);}
+  .ans{margin-top:8px; color:var(--ink-2); border-top:1px dashed var(--line); padding-top:8px;}
+  /* 原文索引 */
+  .srcidx{font-size:14px; color:var(--ink-3); background:var(--bg-soft); border:var(--card-border); border-radius:calc(var(--radius) - 2px); padding:10px 14px;}
+  /* 修改按钮 */
+  .edit-fab{position:fixed; right:18px; bottom:18px; z-index:20; display:inline-flex; align-items:center; gap:6px;
+    background:var(--accent); color:#fff; border:none; border-radius:999px; padding:11px 18px; font-size:15px;
+    box-shadow:0 6px 20px rgba(234,88,12,.35); cursor:pointer;}
+  .edit-fab:hover{filter:brightness(1.05);}
+  .editor-overlay{position:fixed; inset:0; z-index:50; background:#0b0b0c; display:flex; flex-direction:column;}
+  .editor-overlay[hidden]{display:none;}
+  .editor-head{display:flex; align-items:center; justify-content:space-between; color:#e5e5e5; padding:10px 14px; font-size:14px;
+    border-bottom:1px solid #222;}
+  .editor-head button{background:#262626; color:#e5e5e5; border:1px solid #333; border-radius:8px; padding:6px 12px; margin-left:8px; cursor:pointer; font-size:13px;}
+  .editor-head button:hover{border-color:var(--accent); color:#fff;}
+  .editor-body{flex:1; display:flex; min-height:0;}
+  #srcArea{flex:1; border:0; resize:none; background:#16161a; color:#d4d4d4; padding:14px;
+    font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; outline:none;}
+  #preview{flex:1; border:0; background:#fff;}
+  @media(max-width:720px){ .editor-body{flex-direction:column;} #srcArea{height:40%;} }
+  @media(max-width:560px){ .wrap{padding:18px 14px 110px;} h1{font-size:22px;} .toc a{font-size:12px; padding:3px 8px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="toc"><div class="toc-inner">
+    <a href="#overview">总览</a><a href="#prereq">前置</a><a href="#concepts">概念</a>
+    <a href="#steps">步骤</a><a href="#pit">误区</a><a href="#example">实例</a>
+    <a href="#quiz">自测</a><a href="#next">下一步</a><a href="#src">原文索引</a>
+    <span class="theme-sw">
+      <button data-set-theme="light" title="浅色">浅</button>
+      <button data-set-theme="dark" title="暗色">暗</button>
+      <button data-set-theme="magazine" title="杂志风">杂志</button>
+    </span>
+  </div></nav>
+
+  <script>
+  (function(){
+    var KEY='lvd-theme';
+    function apply(t){
+      document.documentElement.setAttribute('data-theme',t);
+      try{localStorage.setItem(KEY,t);}catch(e){}
+      [].forEach.call(document.querySelectorAll('[data-set-theme]'),function(b){
+        b.classList.toggle('on',b.getAttribute('data-set-theme')===t);
+      });
+    }
+    document.addEventListener('click',function(e){
+      var b=e.target.closest&&e.target.closest('[data-set-theme]');
+      if(b) apply(b.getAttribute('data-set-theme'));
+    });
+    var saved=null;
+    try{saved=localStorage.getItem(KEY);}catch(e){}
+    apply(saved||'light');
+  })();
+  </script>
+
+  <div id="content">
+    <h1>视频学习指南（模板）</h1>
+    <p class="sub">由 local-video-distill 生成 · 把逐字稿改写成零基础也能学会的指南</p>
+
+    <!-- ===== 1. 总览 ===== -->
+    <h2 id="overview">总览</h2>
+    <div class="lead">
+      一句话主旨：用大白话写这里——这段视频在解决什么问题、学完你能干啥（≤3 句）。
+    </div>
+
+    <!-- ===== 2. 前置知识 ===== -->
+    <h2 id="prereq">前置知识</h2>
+    <p>需要你先懂啥？没有就标「可跳过」。</p>
+    <ul><li>可选前置 1</li><li>可选前置 2（可跳过）</li></ul>
+
+    <!-- ===== 3. 核心概念 + 术语表 ===== -->
+    <h2 id="concepts">核心概念</h2>
+    <div class="concept"><div class="t">概念 A</div>
+      <p><b>是什么：</b>…<br><b>为什么重要：</b>…<br><b>怎么用：</b>…</p></div>
+    <div class="concept"><div class="t">概念 B</div>
+      <p><b>是什么：</b>…<br><b>为什么重要：</b>…<br><b>怎么用：</b>…</p></div>
+    <h3>术语表</h3>
+    <div class="gloss">
+      <div><b>术语X</b>：大白话解释。</div>
+      <div><b>术语Y</b>：大白话解释。</div>
+    </div>
+
+    <!-- ===== 4. 步骤清单 ===== -->
+    <h2 id="steps">步骤 / 流程清单</h2>
+    <ol class="steps">
+      <li>第一步做什么。<span class="ok">做到什么算对：…</span></li>
+      <li>第二步做什么。<span class="ok">常见卡点：…</span></li>
+      <li>第三步做什么（含分支：走 A / 走 B）。</li>
+    </ol>
+
+    <!-- ===== 5. 常见误区 ===== -->
+    <h2 id="pit">常见误区</h2>
+    <div class="pit"><b>误区：</b>新手容易怎么错。<br><b>正确做法：</b>应该这样。<br><b>为什么：</b>…</div>
+
+    <!-- ===== 6. 实例演算 ===== -->
+    <h2 id="example">实例演算</h2>
+    <div class="example">
+      给一个具体数字从头算到尾：原价 100、券后 80、差价 20，差额占比 = 20/100 = 20%……
+    </div>
+
+    <!-- ===== 7. 自测题 ===== -->
+    <h2 id="quiz">自测题</h2>
+    <details class="qa"><summary>题 1：概念理解题</summary>
+      <div class="ans">答案与解析：…（费曼式：用自己的话解释 XXX）</div></details>
+    <details class="qa"><summary>题 2：计算/操作题</summary>
+      <div class="ans">答案与解析：…</div></details>
+
+    <!-- ===== 8. 下一步 ===== -->
+    <h2 id="next">下一步</h2>
+    <ul><li>最小行动：…</li><li>相关延伸（原视频未展开可标注）</li></ul>
+
+    <!-- ===== 9. 原文索引 ===== -->
+    <h2 id="src">原文索引</h2>
+    <div class="srcidx">关键结论对应原视频时间戳，如 video03 46:04–60:29（来自 MT）。</div>
+  </div>
+</div>
+
+<button id="editBtn" class="edit-fab">✏️ 修改</button>
+<div id="editorOverlay" class="editor-overlay" hidden>
+  <div class="editor-head">
+    <span>编辑源码（实时预览 · 可下载）</span>
+    <div>
+      <button id="downloadBtn">下载 HTML</button>
+      <button id="closeBtn">关闭</button>
+    </div>
+  </div>
+  <div class="editor-body">
+    <textarea id="srcArea" spellcheck="false"></textarea>
+    <iframe id="preview"></iframe>
+  </div>
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('editBtn'),
+      ov=document.getElementById('editorOverlay'),
+      area=document.getElementById('srcArea'),
+      prev=document.getElementById('preview'),
+      dl=document.getElementById('downloadBtn'),
+      cl=document.getElementById('closeBtn'),
+      content=document.getElementById('content'),
+      styleText=document.querySelector('style').textContent;
+  function build(html){
+    return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
+      +'<meta name="viewport" content="width=device-width,initial-scale=1"><style>'
+      +styleText+'</style></head><body><div class="wrap">'+html+'</div></body></html>';
+  }
+  var t;
+  function render(){ clearTimeout(t); t=setTimeout(function(){ prev.srcdoc=build(area.value); },250); }
+  btn.onclick=function(){
+    area.value=content.innerHTML;
+    prev.srcdoc=build(area.value);
+    ov.hidden=false;
+  };
+  area.oninput=render;
+  cl.onclick=function(){ ov.hidden=true; };
+  dl.onclick=function(){
+    var blob=new Blob([build(area.value)],{type:'text/html;charset=utf-8'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download='视频学习指南.html'; a.click(); URL.revokeObjectURL(a.href);
+  };
+})();
+</script>
+</body>
+</html>

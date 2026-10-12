@@ -1,0 +1,12 @@
+{
+  "provider": "bailian",
+  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "model": "qwen-plus",
+  "api_key_env": "DASHSCOPE_API_KEY",
+  "timeout": 300,
+  "chunk_chars": 2500,
+  "max_input_chars": 10000,
+  "max_output_tokens": 4096,
+  "repair_attempts": 2,
+  "request_retries": 2
+}

@@ -1,0 +1,59 @@
+# 转写产物与个人信息不入库
+原始提取.md
+原始提取.json
+*.srt
+*.vtt
+*.ass
+
+# 学习指南/技能包生成产物（示例除外）
+学习指南*.html
+完整版*.html
+/Pipeline/
+/Output/
+
+# 视频与音频原件
+*.mp4
+*.mkv
+*.mov
+*.avi
+*.wav
+*.m4a
+
+# 本地/个人配置
+.env
+*.local.*
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# ⚠️ 模型权重绝不进仓库（单个模型 75MB~3GB，仓库会被撑爆）
+# 模型请用 scripts/download_model.sh 下到 ~/faster-whisper-models/（仓库外）
+faster-whisper-models/
+*.bin
+model.bin
+models--*/
+# 用户若把模型放在 scripts/ 下也要防住
+scripts/*/model.bin
+
+# 转写产物目录（如果放在仓库内）
+transcript/
+transcripts/
+out/
+output/
+
+# 编辑器/系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+# 本机模型配置（不是公共示例）
+local-model.config.json
+bailian.config.json
+模型缓存/
+
+# 本机对话与开发交接，保留在本地
+/*交接*.md
+/费用预留.json
+/*.config.json
+!/examples/*.config.example.json

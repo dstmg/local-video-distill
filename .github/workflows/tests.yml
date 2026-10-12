@@ -1,0 +1,92 @@
+name: tests
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 自检套件 (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11", "3.12" ]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # 自检套件只用标准库 + 自身模块，无需装 faster-whisper（离线可跑）
+      # 只装 pypinyin 以便完整覆盖拼音纠错用例（非必需，缺失会自动 skip）
+      - name: 安装可选依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install pypinyin
+
+      - name: 跑自检套件
+        working-directory: scripts
+        run: python -m unittest discover -p "test*.py" -v
+
+      - name: 语法检查（所有脚本）
+        run: |
+          python -m compileall -q scripts/ && echo "compileall OK"
+          for f in scripts/*.sh; do bash -n "$f" || exit 1; done
+          echo "bash 语法 OK"
+
+  sanity:
+    name: 冒烟检查（脚本可加载）
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 验证脚本能被 Python 正常解析并加载（不需要装 faster-whisper）
+      - name: 各脚本可导入/可执行
+        run: |
+          for f in scripts/*.py; do
+            # py_compile 保证语法正确且模块能被加载
+            python -m py_compile "$f" || { echo "FAIL $f"; exit 1; }
+            echo "OK   $f"
+          done
+      - name: doctor.py 能在纯净环境运行
+        run: |
+          # doctor.py 无 --argparse，应能在没装 faster-whisper 时优雅报告缺失
+          set +e
+          python scripts/doctor.py > doctor.log 2>&1
+          rc=$?
+          cat doctor.log
+          test "$rc" -eq 1 && ! grep -q Traceback doctor.log
+
+  windows:
+    name: Windows 自检 (Python 3.12)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 安装可选依赖
+        run: python -m pip install pypinyin
+      - name: 跑自检套件
+        run: python -X utf8 -m unittest discover -s scripts -p "test*.py" -v
+      - name: Python 语法检查
+        run: python -m compileall -q scripts
+

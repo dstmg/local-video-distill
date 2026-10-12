@@ -1,0 +1,12 @@
+{
+  "provider": "ollama",
+  "base_url": "http://127.0.0.1:11434/v1",
+  "model": "qwen3:4b",
+  "timeout": 300,
+  "chunk_chars": 2500,
+  "max_input_chars": 10000,
+  "max_output_tokens": 4096,
+  "repair_attempts": 2,
+  "request_retries": 2,
+  "context_length": 16384
+}
