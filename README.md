@@ -1,8 +1,12 @@
-# local-video-distill
+# 商知 · 电商视频知识蒸馏
 
 [![tests](https://github.com/dstmg/local-video-distill/actions/workflows/tests.yml/badge.svg)](https://github.com/dstmg/local-video-distill/actions/workflows/tests.yml)
 
-把本地视频变成带时间戳的原稿、详细分析、有证据的知识关系和学习指南。支持三种分析方式：Codex / WorkBuddy 等 Agent、本地模型、通义千问／阿里云百炼。
+商知面向电商人的视频学习与知识积累，把运营、推广、选品、数据分析等本地视频教程变成带时间戳的原稿、详细分析、有证据的知识关系和学习指南。支持三种分析方式：Codex / WorkBuddy 等 Agent、本地模型、通义千问／阿里云百炼。
+
+![商知：把电商视频，变成自己的知识](assets/shangzhi-cover.png)
+
+中文展示名为 **商知**；仓库与技能标识保持 `local-video-distill`。
 
 ## 首次使用
 

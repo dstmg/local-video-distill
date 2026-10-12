@@ -1,21 +1,19 @@
 ---
 name: local-video-distill
 description: |
-  Local video distillation pipeline: turn a video (with or without subtitles) into
-  (1) a timestamped machine transcript (MT) saved to a local knowledge folder, and
-  (2) a beginner-friendly single-page HTML study guide you can actually learn from.
-  Covers two input paths — external/embedded subtitle tracks, and no-subtitle videos via
-  local ASR (faster-whisper). Analysis is performed by the Agent, not the extraction script.
-  Optionally (Stage 4) distills the transcript into a structured skill bundle of capability cards.
-  Does not fabricate content, does not translate unless asked, does not run ad accounts.
+  商知：面向电商人的视频学习与知识蒸馏，适用于运营、推广、选品、数据分析等视频教程。
+  本地优先提取字幕或语音，保留带时间戳的原稿和独立校对副本。
+  支持 Agent 接续、本地模型和显式选择的百炼文字分析，生成详细分析、学习指南和证据关系。
+  关键结论需人工复核；不自动操作店铺、上传音视频、安装技能或发布材料。
 metadata:
+  display-name: 商知
   variant: single
   scope: video → transcript → study guide (→ skill bundle)
   local-first: true
   license: MIT
 ---
 
-# 本地视频蒸馏 · Local Video Distill
+# 商知 · 电商视频知识蒸馏
 
 把一段本地视频，变成可复用的资产：
 
